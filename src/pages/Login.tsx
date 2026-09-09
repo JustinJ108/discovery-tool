@@ -2,6 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+// Intentionally public: this account only ever holds seeded sample data
+// (see supabase/seed_demo.sql), so there's nothing sensitive in hardcoding
+// its credentials here for the one-click demo button below.
+const DEMO_EMAIL = 'demo@discoverytool.com'
+const DEMO_PASSWORD = 'discovery'
+
 export default function Login() {
   const { session, signIn, signUp } = useAuth()
   const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in')
@@ -10,8 +16,18 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
   const [info, setInfo] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [demoSubmitting, setDemoSubmitting] = useState(false)
 
   if (session) return <Navigate to="/" replace />
+
+  async function handleDemoLogin() {
+    setError(null)
+    setInfo(null)
+    setDemoSubmitting(true)
+    const result = await signIn(DEMO_EMAIL, DEMO_PASSWORD)
+    if (result.error) setError(result.error)
+    setDemoSubmitting(false)
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -83,6 +99,24 @@ export default function Login() {
         >
           {mode === 'sign-in' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
         </button>
+
+        <div className="my-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-xs uppercase tracking-wide text-slate-400">or</span>
+          <div className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleDemoLogin}
+          disabled={demoSubmitting}
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+        >
+          {demoSubmitting ? 'Signing in…' : 'Try the demo →'}
+        </button>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          Explores a pre-populated account — no sign-up needed.
+        </p>
       </div>
     </div>
   )

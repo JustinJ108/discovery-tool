@@ -5,9 +5,8 @@ the people at them, notes from discovery calls, and the pain points those
 calls surface — with pain points linkable back to the specific note they came
 from.
 
-**[Live demo →](#) <!-- TODO: replace with deployed URL --></br>**
-Try it with the seeded demo account: `demo@example.com` / `demo-password-123`
-<!-- TODO: replace with real demo credentials once seeded -->
+**[Live demo →](https://discovery-tool-beta.vercel.app)**
+<!-- TODO: add seeded demo account credentials here once created -->
 
 ## Why this exists
 
